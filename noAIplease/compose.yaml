@@ -1,0 +1,8 @@
+services:
+  noAIplease:
+    build: .
+    environment:
+      FLAG: ${FLAG}
+    ports:
+      - "31337:31337"
+    restart: unless-stopped
