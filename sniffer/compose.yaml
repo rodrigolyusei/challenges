@@ -1,5 +1,5 @@
 services:
-  noAIplease:
+  sniffer:
     build: .
     environment:
       FLAG: ${FLAG}
