@@ -7,5 +7,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY main.py .
+COPY logs .
 
 CMD ["socat", "TCP-LISTEN:31337,reuseaddr,fork", "EXEC:python -u /app/main.py"]
