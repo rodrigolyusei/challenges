@@ -1,12 +1,17 @@
+import hashlib
+import hmac
 import os
-import time
 import secrets
+import time
 
-#flag = os.environ["FLAG"]
+flag = os.environ["FLAG"]
 
 iv = secrets.token_bytes(16)
-key = b'secret_key_12345'
+key = secrets.token_bytes(16)
 block_size = 16
+
+def pseudo_random_function(counter):
+    return hmac.new(key, counter, hashlib.sha256).digest()
 
 def counter(message):
     encrypted = b''
@@ -15,7 +20,8 @@ def counter(message):
 
     for index, block in enumerate(blocks):
         counter_block = (int.from_bytes(iv, "big") + index + 1).to_bytes(16, 'big')
-        encrypted += bytes(blockbyte ^ ivbyte for blockbyte, ivbyte in zip(block, counter_block))
+        prf = pseudo_random_function(counter_block)
+        encrypted += bytes(blockbyte ^ prfbyte for blockbyte, prfbyte in zip(block, prf))
 
     return encrypted
 
@@ -59,5 +65,7 @@ if __name__ == "__main__":
 
     if text == password:
         print("\nAccess granted.")
+        print("Congratulations! Here is your flag:")
+        print(flag)
     else:
         print("\nAccess denied.")
